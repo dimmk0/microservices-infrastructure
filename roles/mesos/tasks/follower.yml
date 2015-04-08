@@ -41,7 +41,7 @@
 
 - name: set consul credential
   sudo: yes
-  command: curl -X PUT -d @/etc/mesos/follower-credential localhost:8500/v1/kv/mesos/auth/follower/{{ mesos_follower_principal }}
+  command: curl -X PUT -d '{{ mesos_follower_secret }}' localhost:8500/v1/kv/mesos/auth/follower/{{ mesos_follower_principal }}
   tags:
     - mesos
 
