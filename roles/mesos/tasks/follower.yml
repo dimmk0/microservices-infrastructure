@@ -39,6 +39,12 @@
   tags:
     - mesos
 
+- name: set consul credential
+  sudo: yes
+  command: curl -X PUT -d @/etc/mesos/follower-credential localhost:8500/v1/kv/mesos/auth/follower/{{ mesos_follower_principal }}
+  tags:
+    - mesos
+
 - name: delete credential
   when: not mesos_authenticate_followers|bool
   sudo: yes

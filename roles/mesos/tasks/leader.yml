@@ -9,27 +9,6 @@
   tags:
     - mesos
 
-- name: write leader credentials
-  sudo: yes
-  when: mesos_authenticate_frameworks|bool or mesos_authenticate_followers|bool
-  template:
-    src: master-credentials.j2
-    dest: /etc/mesos/credentials
-    mode: 0600
-  notify:
-    - restart mesos leader
-  tags:
-    - mesos
-
-- name: delete leader credentials
-  sudo: yes
-  when: not mesos_authenticate_frameworks|bool and not mesos_authenticate_followers|bool
-  file:
-    dest: /etc/mesos/credentials
-    state: absent
-  tags:
-    - mesos
-
 - name: generate leader consul service
   sudo: yes
   template:
@@ -67,8 +46,13 @@
 - name: deploy iptables template
   sudo: yes
   template:
-    src: mesos-leader-iptables.tmpl.j2
-    dest: /etc/consul-template/templates/mesos-leader-iptables.tmpl
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: mesos-leader-iptables.tmpl.j2
+      dest: /etc/consul-template/templates/mesos-leader-iptables.tmpl
+    - src: mesos-leader-credentials.tmpl.j2
+      dest:  /etc/consul-template/templates/mesos-leader-credentials.tmpl
   notify:
     reload consul-template
   tags:

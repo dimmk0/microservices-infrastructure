@@ -1,4 +1,10 @@
 ---
+- name: set mesos auth
+  sudo: yes
+  command: curl -X PUT -d  {{ marathon_secret }} localhost:8500/v1/kv/{{ mesos_framework_kv }}/marathon
+  tags:
+    - marathon
+
 - name: create secret file
   sudo: yes
   when: marathon_secret != ""
