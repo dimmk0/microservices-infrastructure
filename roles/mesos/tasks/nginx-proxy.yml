@@ -20,7 +20,17 @@
     dest: /usr/lib/systemd/system/nginx-mesos-leader.service
   tags:
     - mesos
+  notify:
+    - restart nginx-mesos-leader
+
+- name: deploy authentication template
+  sudo: yes
+  template:
+    src: nginx-mesos-auth.tmpl.j2
+    dest: /etc/nginx-mesos-auth.tmpl
   tags:
+    - mesos
+  notify:
     - restart nginx-mesos-leader
 
 - name: enable nginx-mesos-leader
